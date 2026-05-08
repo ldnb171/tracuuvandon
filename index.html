@@ -20,15 +20,15 @@
     .container {
         max-width: 500px;
         margin: auto;
-        background: white;
+        background: #fff;
         padding: 18px;
         border-radius: 14px;
         box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     }
 
     h2 {
-        margin-top: 0;
         text-align: center;
+        margin-top: 0;
         margin-bottom: 18px;
     }
 
@@ -37,15 +37,15 @@
     button {
         width: 100%;
         padding: 12px;
+        margin-top: 10px;
         font-size: 16px;
         border-radius: 10px;
         border: 1px solid #ccc;
-        margin-top: 10px;
     }
 
     textarea {
-        resize: vertical;
         min-height: 90px;
+        resize: vertical;
     }
 
     button {
@@ -67,6 +67,7 @@
     .btn-copy {
         background: #6c757d;
         color: white;
+        display: none;
     }
 
     .result {
@@ -76,10 +77,6 @@
         border-radius: 10px;
         white-space: pre-wrap;
         font-size: 15px;
-        display: none;
-    }
-
-    #copyBtn {
         display: none;
     }
 </style>
@@ -97,7 +94,10 @@
         placeholder="Nhập mã vận đơn"
     >
 
-    <button class="btn-primary" onclick="kiemTra()">
+    <button
+        class="btn-primary"
+        onclick="kiemTra()"
+    >
         Kiểm tra hành trình
     </button>
 
@@ -106,7 +106,10 @@
         placeholder="Nhập ghi chú..."
     ></textarea>
 
-    <button class="btn-success" onclick="taoGhiChu()">
+    <button
+        class="btn-success"
+        onclick="taoGhiChu()"
+    >
         Tạo ghi chú
     </button>
 
@@ -128,7 +131,7 @@ function taoLink(mvd) {
 
     mvd = mvd.trim().toUpperCase();
 
-    // SPX
+    // Shopee Express
     if (mvd.startsWith("SPX")) {
         return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
     }
@@ -151,7 +154,7 @@ function taoLink(mvd) {
         return "https://www.best-inc.vn/track?bills=" + mvd;
     }
 
-    // J&T
+    // J&T Express
     if (/^8\d+/.test(mvd)) {
         return "https://www.aftership.com/vi/track/jtexpress-vn/" + mvd;
     }
@@ -161,7 +164,12 @@ function taoLink(mvd) {
         mvd.startsWith("VTPVN") ||
         mvd.startsWith("SHOPEEVTPVN")
     ) {
-        return "https://en.viettelpost.com.vn/tra-cuu-hanh-trinh-don";
+        return "https://vi.viettelpost.com.vn/tra-cuu-hanh-trinh-don";
+    }
+
+    // VNPost
+    if (/^EO.*VN$/.test(mvd)) {
+        return "https://www.aftership.com/vi/track/vnpost/" + mvd;
     }
 
     return "";
@@ -204,11 +212,11 @@ function taoGhiChu() {
         return;
     }
 
-    const text = ghichu + "\n\n" + link;
+    const ketQuaText = ghichu + "\n\n" + link;
 
     const ketqua = document.getElementById("ketqua");
 
-    ketqua.textContent = text;
+    ketqua.textContent = ketQuaText;
 
     ketqua.style.display = "block";
 
