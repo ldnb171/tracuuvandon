@@ -1,145 +1,230 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm tra vận đơn</title>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f2f4f7;
-            margin: 0;
-            padding: 16px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiểm tra vận đơn</title>
 
-        .container {
-            max-width: 480px;
-            margin: auto;
-            background: #fff;
-            padding: 16px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-        h2 {
-            margin-top: 0;
-            text-align: center;
-        }
+    body {
+        margin: 0;
+        padding: 16px;
+        background: #f2f4f7;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-        input, textarea, button {
-            width: 100%;
-            font-size: 16px;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
+    .container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 18px;
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+    h2 {
+        margin-top: 0;
+        text-align: center;
+        margin-bottom: 18px;
+    }
 
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            font-weight: 600;
-        }
+    input,
+    textarea,
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+    }
 
-        button.secondary {
-            background: #28a745;
-        }
+    textarea {
+        resize: vertical;
+        min-height: 90px;
+    }
 
-        button.copy {
-            background: #6c757d;
-        }
+    button {
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
 
-        .result {
-            margin-top: 12px;
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            font-size: 15px;
-        }
-    </style>
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-copy {
+        background: #6c757d;
+        color: white;
+    }
+
+    .result {
+        margin-top: 14px;
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 10px;
+        white-space: pre-wrap;
+        font-size: 15px;
+        display: none;
+    }
+
+    #copyBtn {
+        display: none;
+    }
+</style>
 </head>
+
 <body>
 
 <div class="container">
+
     <h2>Kiểm tra vận đơn</h2>
 
-    <!-- PHẦN 1 -->
-    <input id="mvd" type="text" placeholder="Mã vận đơn">
-    <button onclick="kiemTra()">Kiểm tra hành trình</button>
+    <input
+        type="text"
+        id="mvd"
+        placeholder="Nhập mã vận đơn"
+    >
 
-    <!-- PHẦN 2 -->
-    <textarea id="ghichu" placeholder="Nhập ghi chú (tên sản phẩm, giá, ngày giao, ...)"></textarea>
-    <button class="secondary" onclick="taoGhiChu()">Tạo ghi chú</button>
+    <button class="btn-primary" onclick="kiemTra()">
+        Kiểm tra hành trình
+    </button>
 
-    <div id="ketqua" class="result" style="display:none;"></div>
-    <button class="copy" id="copyBtn" style="display:none;" onclick="copyText()">Copy</button>
+    <textarea
+        id="ghichu"
+        placeholder="Nhập ghi chú..."
+    ></textarea>
+
+    <button class="btn-success" onclick="taoGhiChu()">
+        Tạo ghi chú
+    </button>
+
+    <div id="ketqua" class="result"></div>
+
+    <button
+        id="copyBtn"
+        class="btn-copy"
+        onclick="copyText()"
+    >
+        Copy
+    </button>
+
 </div>
 
 <script>
-    function taoLink(mvd) {
-        if (mvd.startsWith("SPX")) {
-            return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
-        }
-        if (mvd.startsWith("G")) {
-            return "https://donhang.ghn.vn/?order_code=" + mvd;
-        }
-        return "";
+
+function taoLink(mvd) {
+
+    mvd = mvd.trim().toUpperCase();
+
+    // SPX
+    if (mvd.startsWith("SPX")) {
+        return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
     }
 
-    function kiemTra() {
-        const mvd = document.getElementById("mvd").value.trim();
-        if (!mvd) {
-            alert("Vui lòng nhập mã vận đơn");
-            return;
-        }
-
-        const link = taoLink(mvd);
-        if (!link) {
-            alert("Mã vận đơn không hợp lệ");
-            return;
-        }
-
-        window.open(link, "_blank");
+    // GHN
+    if (
+        mvd.startsWith("G") ||
+        mvd.startsWith("VNGH")
+    ) {
+        return "https://donhang.ghn.vn/?order_code=" + mvd;
     }
 
-    function taoGhiChu() {
-        const mvd = document.getElementById("mvd").value.trim();
-        const ghichu = document.getElementById("ghichu").value.trim();
-
-        if (!mvd) {
-            alert("Chưa nhập mã vận đơn");
-            return;
-        }
-
-        const link = taoLink(mvd);
-        if (!link) {
-            alert("Mã vận đơn không hợp lệ");
-            return;
-        }
-
-        const ketQuaText = ghichu + "\n\n" + link;
-
-        const ketquaDiv = document.getElementById("ketqua");
-        ketquaDiv.textContent = ketQuaText;
-        ketquaDiv.style.display = "block";
-
-        document.getElementById("copyBtn").style.display = "block";
+    // VN...K
+    if (/^VN.*[A-Z]$/.test(mvd)) {
+        return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
     }
 
-    function copyText() {
-        const text = document.getElementById("ketqua").textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Đã copy!");
-        });
+    // Best Express
+    if (mvd.startsWith("TTVN")) {
+        return "https://www.best-inc.vn/track?bills=" + mvd;
     }
+
+    // J&T
+    if (/^8\d+/.test(mvd)) {
+        return "https://www.aftership.com/vi/track/jtexpress-vn/" + mvd;
+    }
+
+    // Viettel Post
+    if (
+        mvd.startsWith("VTPVN") ||
+        mvd.startsWith("SHOPEEVTPVN")
+    ) {
+        return "https://vi.viettelpost.com.vn/tra-cuu-hanh-trinh-don";
+    }
+
+    return "";
+}
+
+function kiemTra() {
+
+    const mvd = document.getElementById("mvd").value.trim();
+
+    if (!mvd) {
+        alert("Vui lòng nhập mã vận đơn");
+        return;
+    }
+
+    const link = taoLink(mvd);
+
+    if (!link) {
+        alert("Không nhận diện được đơn vị vận chuyển");
+        return;
+    }
+
+    window.open(link, "_blank");
+}
+
+function taoGhiChu() {
+
+    const mvd = document.getElementById("mvd").value.trim();
+
+    const ghichu = document.getElementById("ghichu").value.trim();
+
+    if (!mvd) {
+        alert("Chưa nhập mã vận đơn");
+        return;
+    }
+
+    const link = taoLink(mvd);
+
+    if (!link) {
+        alert("Không nhận diện được đơn vị vận chuyển");
+        return;
+    }
+
+    const text = ghichu + "\n\n" + link;
+
+    const ketqua = document.getElementById("ketqua");
+
+    ketqua.textContent = text;
+
+    ketqua.style.display = "block";
+
+    document.getElementById("copyBtn").style.display = "block";
+}
+
+function copyText() {
+
+    const text = document.getElementById("ketqua").textContent;
+
+    navigator.clipboard.writeText(text)
+    .then(() => {
+        alert("Đã copy!");
+    });
+}
+
 </script>
 
 </body>
