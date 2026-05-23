@@ -3,82 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Kiểm tra vận đơn</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
 
-    body {
-        margin: 0;
-        padding: 16px;
-        background: #f2f4f7;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+*{
+    box-sizing:border-box;
+}
 
-    .container {
-        max-width: 500px;
-        margin: auto;
-        background: #fff;
-        padding: 18px;
-        border-radius: 14px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-    }
+body{
+    margin:0;
+    padding:16px;
+    background:#f2f4f7;
+    font-family:system-ui,sans-serif;
+}
 
-    h2 {
-        text-align: center;
-        margin-top: 0;
-        margin-bottom: 18px;
-    }
+.container{
+    max-width:680px;
+    margin:auto;
+    background:#fff;
+    border-radius:16px;
+    padding:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.08);
+}
 
-    input,
-    textarea,
-    button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        font-size: 16px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-    }
+h2{
+    margin-top:0;
+    text-align:center;
+    margin-bottom:18px;
+}
 
-    textarea {
-        min-height: 90px;
-        resize: vertical;
-    }
+textarea,
+input,
+button{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+    margin-top:10px;
+}
 
-    button {
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-    }
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
 
-    .btn-primary {
-        background: #007bff;
-        color: white;
-    }
+button{
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+}
 
-    .btn-success {
-        background: #28a745;
-        color: white;
-    }
+.btn-primary{
+    background:#007bff;
+    color:white;
+}
 
-    .btn-copy {
-        background: #6c757d;
-        color: white;
-        display: none;
-    }
+.btn-success{
+    background:#28a745;
+    color:white;
+}
 
-    .result {
-        margin-top: 14px;
-        background: #f8f9fa;
-        padding: 12px;
-        border-radius: 10px;
-        white-space: pre-wrap;
-        font-size: 15px;
-        display: none;
-    }
+.btn-gray{
+    background:#6c757d;
+    color:white;
+}
+
+.hidden{
+    display:none;
+}
+
+.result{
+    margin-top:16px;
+}
+
+.info-text{
+    margin-top:10px;
+    font-size:15px;
+    color:#555;
+    font-weight:600;
+}
+
+.mvd-box{
+    border:1px solid #ddd;
+    border-radius:12px;
+    background:#fafafa;
+    padding:12px;
+    margin-top:12px;
+}
+
+.mvd-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.mvd-checkbox{
+    width:22px;
+    height:22px;
+    flex-shrink:0;
+    cursor:pointer;
+}
+
+.mvd-text{
+    font-weight:700;
+    word-break:break-all;
+}
+
+.delete-text{
+
+    margin-top:10px;
+
+    font-size:14px;
+
+    color:#dc3545;
+
+    text-decoration:underline;
+
+    cursor:pointer;
+
+    width:fit-content;
+
+    user-select:none;
+}
+
+.note-result{
+    margin-top:14px;
+    background:#f8f9fa;
+    padding:12px;
+    border-radius:10px;
+    white-space:pre-wrap;
+}
+
+hr{
+    margin:18px 0;
+}
+
+.toast{
+
+    position:fixed;
+
+    bottom:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#333;
+
+    color:white;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:0.3s;
+
+    z-index:9999;
+}
+
+.toast.show{
+
+    opacity:1;
+}
+
 </style>
 </head>
 
@@ -86,151 +182,590 @@
 
 <div class="container">
 
-    <h2>Kiểm tra vận đơn</h2>
+<h2>Kiểm tra vận đơn</h2>
 
-    <input
-        type="text"
-        id="mvd"
-        placeholder="Nhập mã vận đơn"
-    >
+<textarea
+    id="rawInput"
+    placeholder="Nhập chuỗi có chứa mã vận đơn..."
+></textarea>
 
-    <button
-        class="btn-primary"
-        onclick="kiemTra()"
-    >
-        Kiểm tra hành trình
-    </button>
+<button
+    class="btn-primary"
+    onclick="tachMaVanDon()"
+>
+    Tách mã vận đơn
+</button>
 
-    <textarea
-        id="ghichu"
-        placeholder="Nhập ghi chú..."
-    ></textarea>
+<div
+    id="splitInfo"
+    class="info-text"
+></div>
 
-    <button
-        class="btn-success"
-        onclick="taoGhiChu()"
-    >
-        Tạo ghi chú
-    </button>
+<div
+    id="mvdList"
+    class="result"
+></div>
 
-    <div id="ketqua" class="result"></div>
+<hr>
 
-    <button
-        id="copyBtn"
-        class="btn-copy"
-        onclick="copyText()"
-    >
-        Copy
-    </button>
+<input
+    type="text"
+    id="mvd"
+    placeholder="Nhập mã vận đơn thủ công"
+>
+
+<button
+    class="btn-primary"
+    onclick="kiemTra()"
+>
+    Kiểm tra hành trình
+</button>
+
+<textarea
+    id="ghichu"
+    placeholder="Nhập ghi chú..."
+></textarea>
+
+<button
+    class="btn-success"
+    onclick="taoGhiChu()"
+>
+    Tạo ghi chú
+</button>
+
+<div
+    id="ketqua"
+    class="note-result hidden"
+></div>
+
+<button
+    id="copyBtn"
+    class="btn-gray hidden"
+    onclick="copyGhiChu()"
+>
+    Copy ghi chú
+</button>
 
 </div>
 
+<div id="toast" class="toast"></div>
+
 <script>
 
-function taoLink(mvd) {
+let selectedMVD = [];
 
-    mvd = mvd.trim().toUpperCase();
+let currentList = [];
 
-    // Shopee Express
-    if (mvd.startsWith("SPX")) {
+// ======================================
+// TOAST
+// ======================================
+
+function showToast(text){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.innerText = text;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },3000);
+}
+
+// ======================================
+// FORMAT
+// ======================================
+
+function normalizeMVD(mvd){
+
+    return mvd.trim().toUpperCase();
+}
+
+// ======================================
+// LINK
+// ======================================
+
+function taoLink(mvd){
+
+    mvd = normalizeMVD(mvd);
+
+    // SPX
+    if(/^SPXVN\d+$/.test(mvd)){
+
         return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
     }
 
-    // GHN
-    if (
-        mvd.startsWith("G") ||
-        mvd.startsWith("VNGH")
-    ) {
-        return "https://donhang.ghn.vn/?order_code=" + mvd;
-    }
+    // SHOPEE VTP
+    if(/^SHOPEEVTPVN\d+[A-Z]$/.test(mvd)){
 
-    // VN...K
-    if (/^VN.*[A-Z]$/.test(mvd)) {
-        return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
-    }
-
-    // Best Express
-    if (mvd.startsWith("TTVN")) {
-        return "https://www.best-inc.vn/track?bills=" + mvd;
-    }
-
-    // J&T Express
-    if (/^8\d+/.test(mvd)) {
-        return "https://www.aftership.com/vi/track/jtexpress-vn/" + mvd;
-    }
-
-    // Viettel Post
-    if (
-        mvd.startsWith("VTPVN") ||
-        mvd.startsWith("SHOPEEVTPVN")
-    ) {
         return "https://en.viettelpost.com.vn/tra-cuu-hanh-trinh-don";
     }
 
-    // VNPost
-    if (/^EO.*VN$/.test(mvd)) {
+    // VTP
+    if(/^VTPVN[A-Z0-9]+$/.test(mvd)){
+
+        return "https://en.viettelpost.com.vn/tra-cuu-hanh-trinh-don";
+    }
+
+    // GHN
+    if(
+        /^G[A-Z0-9]{7}$/.test(mvd)
+        ||
+        /^VNGH[A-Z0-9]+$/.test(mvd)
+    ){
+
+        return "https://donhang.ghn.vn/?order_code=" + mvd;
+    }
+
+    // BEST
+    if(/^TTVN[A-Z0-9]+$/.test(mvd)){
+
+        return "https://www.best-inc.vn/track?bills=" + mvd;
+    }
+
+    // JT
+    if(/^8\d{11}$/.test(mvd)){
+
+        return "https://www.aftership.com/vi/track/jtexpress-vn/" + mvd;
+    }
+
+    // VNPOST
+    if(/^EO[A-Z0-9]+VN$/.test(mvd)){
+
         return "https://www.aftership.com/vi/track/vnpost/" + mvd;
+    }
+
+    // VN...
+    if(
+        /^VN[A-Z0-9]+[A-Z]$/.test(mvd)
+        &&
+        !mvd.includes("SPXVN")
+        &&
+        !mvd.includes("VTPVN")
+        &&
+        !mvd.includes("SHOPEEVTPVN")
+    ){
+
+        return "https://dichvudatdon.com/dashboard.php?page=tracking&mvd=" + mvd;
     }
 
     return "";
 }
 
-function kiemTra() {
+// ======================================
+// TÁCH MÃ
+// ======================================
 
-    const mvd = document.getElementById("mvd").value.trim();
+function extractAllMVD(text){
 
-    if (!mvd) {
-        alert("Vui lòng nhập mã vận đơn");
-        return;
-    }
+    let foundItems = [];
 
-    const link = taoLink(mvd);
+    // Regex ưu tiên cao
+    const priorityPatterns = [
 
-    if (!link) {
-        alert("Không nhận diện được đơn vị vận chuyển");
-        return;
-    }
+        /SHOPEEVTPVN\d+[A-Z]/g,
 
-    window.open(link, "_blank");
-}
+        /SPXVN\d+/g
+    ];
 
-function taoGhiChu() {
+    priorityPatterns.forEach(regex=>{
 
-    const mvd = document.getElementById("mvd").value.trim();
+        let match;
 
-    const ghichu = document.getElementById("ghichu").value.trim();
+        while((match = regex.exec(text)) !== null){
 
-    if (!mvd) {
-        alert("Chưa nhập mã vận đơn");
-        return;
-    }
-
-    const link = taoLink(mvd);
-
-    if (!link) {
-        alert("Không nhận diện được đơn vị vận chuyển");
-        return;
-    }
-
-    const ketQuaText = ghichu + "\n\n" + link;
-
-    const ketqua = document.getElementById("ketqua");
-
-    ketqua.textContent = ketQuaText;
-
-    ketqua.style.display = "block";
-
-    document.getElementById("copyBtn").style.display = "block";
-}
-
-function copyText() {
-
-    const text = document.getElementById("ketqua").textContent;
-
-    navigator.clipboard.writeText(text)
-    .then(() => {
-        alert("Đã copy!");
+            foundItems.push({
+                mvd:match[0],
+                index:match.index
+            });
+        }
     });
+
+    // Xóa mã dài
+    let cleanedText = text;
+
+    cleanedText =
+        cleanedText.replace(
+            /SHOPEEVTPVN\d+[A-Z]/g,
+            " "
+        );
+
+    cleanedText =
+        cleanedText.replace(
+            /SPXVN\d+/g,
+            " "
+        );
+
+    // Regex còn lại
+    const otherPatterns = [
+
+        /VTPVN[A-Z0-9]+/g,
+
+        /G[A-Z0-9]{7}/g,
+
+        /VNGH[A-Z0-9]+/g,
+
+        /TTVN[A-Z0-9]+/g,
+
+        /8\d{11}/g,
+
+        /EO[A-Z0-9]+VN/g,
+
+        /VN[A-Z0-9]+[A-Z]/g
+    ];
+
+    otherPatterns.forEach(regex=>{
+
+        let match;
+
+        while((match = regex.exec(cleanedText)) !== null){
+
+            const mvd =
+                normalizeMVD(match[0]);
+
+            if(taoLink(mvd)){
+
+                foundItems.push({
+                    mvd:mvd,
+                    index:match.index
+                });
+            }
+        }
+    });
+
+    // Sắp xếp
+    foundItems.sort((a,b)=>a.index - b.index);
+
+    // Xóa trùng
+    let finalList = [];
+
+    let existed = new Set();
+
+    foundItems.forEach(item=>{
+
+        if(!existed.has(item.mvd)){
+
+            existed.add(item.mvd);
+
+            finalList.push(item.mvd);
+        }
+    });
+
+    return finalList;
+}
+
+// ======================================
+// HIỂN THỊ
+// ======================================
+
+function tachMaVanDon(){
+
+    const text =
+        document.getElementById("rawInput").value;
+
+    currentList =
+        extractAllMVD(text);
+
+    renderList();
+}
+
+function renderList(){
+
+    const box =
+        document.getElementById("mvdList");
+
+    const info =
+        document.getElementById("splitInfo");
+
+    selectedMVD = [];
+
+    if(currentList.length === 0){
+
+        box.innerHTML =
+            "Không tìm thấy mã vận đơn.";
+
+        info.innerText = "";
+
+        return;
+    }
+
+    info.innerText =
+        `Đã tách thành công ${currentList.length} mã vận đơn`;
+
+    let html = "";
+
+    currentList.forEach((mvd,index)=>{
+
+        html += `
+        <div class="mvd-box">
+
+            <div class="mvd-top">
+
+                <input
+                    type="checkbox"
+                    class="mvd-checkbox"
+                    onchange="toggleMVD('${mvd}',this)"
+                >
+
+                <div class="mvd-text">
+                    ${mvd}
+                </div>
+
+            </div>
+
+            <button
+                class="btn-gray"
+                onclick="copySingle('${mvd}')"
+            >
+                Copy mã vận đơn ${index + 1}
+            </button>
+
+            <button
+                id="track-${mvd}"
+                class="btn-primary hidden"
+                onclick="trackSingle('${mvd}')"
+            >
+                Tra nhanh hành trình mã vận đơn này
+            </button>
+
+            <div
+                class="delete-text"
+                onclick="removeMVD('${mvd}')"
+            >
+                Xóa mã vận đơn này
+            </div>
+
+        </div>
+        `;
+    });
+
+    if(currentList.length > 1){
+
+        html += `
+        <hr>
+
+        <button
+            class="btn-success"
+            onclick="copyAll()"
+        >
+            Copy tất cả mã vận đơn
+        </button>
+
+        <button
+            id="copySelectedBtn"
+            class="btn-primary hidden"
+            onclick="copySelected()"
+        >
+        </button>
+        `;
+    }
+
+    box.innerHTML = html;
+}
+
+// ======================================
+// XÓA MÃ
+// ======================================
+
+function removeMVD(mvd){
+
+    currentList =
+        currentList.filter(x=>x !== mvd);
+
+    renderList();
+
+    showToast(
+        `Đã xóa ${mvd} khỏi danh sách mã vận đơn`
+    );
+}
+
+// ======================================
+// CHECKBOX
+// ======================================
+
+function toggleMVD(mvd,checkbox){
+
+    if(checkbox.checked){
+
+        if(!selectedMVD.includes(mvd)){
+
+            selectedMVD.push(mvd);
+        }
+
+    }else{
+
+        selectedMVD =
+            selectedMVD.filter(x=>x!==mvd);
+    }
+
+    updateUI();
+}
+
+function updateUI(){
+
+    document
+    .querySelectorAll("[id^='track-']")
+    .forEach(btn=>{
+        btn.classList.add("hidden");
+    });
+
+    const copySelectedBtn =
+        document.getElementById("copySelectedBtn");
+
+    if(copySelectedBtn){
+
+        copySelectedBtn.classList.add("hidden");
+    }
+
+    if(selectedMVD.length === 1){
+
+        const mvd = selectedMVD[0];
+
+        const btn =
+            document.getElementById("track-" + mvd);
+
+        if(btn){
+
+            btn.classList.remove("hidden");
+        }
+
+        document.getElementById("mvd").value = mvd;
+    }
+
+    if(selectedMVD.length > 1){
+
+        if(copySelectedBtn){
+
+            copySelectedBtn.innerText =
+                `Copy ${selectedMVD.length} mã vận đơn đã chọn`;
+
+            copySelectedBtn.classList.remove("hidden");
+        }
+    }
+}
+
+// ======================================
+// COPY
+// ======================================
+
+function copySingle(mvd){
+
+    navigator.clipboard.writeText(mvd);
+
+    showToast("Đã copy mã vận đơn");
+}
+
+function copyAll(){
+
+    const text =
+        currentList.join("\n");
+
+    navigator.clipboard.writeText(text);
+
+    showToast("Đã copy tất cả mã vận đơn");
+}
+
+function copySelected(){
+
+    navigator.clipboard.writeText(
+        selectedMVD.join("\n")
+    );
+
+    showToast("Đã copy các mã đã chọn");
+}
+
+// ======================================
+// TRACK
+// ======================================
+
+function trackSingle(mvd){
+
+    const link = taoLink(mvd);
+
+    if(link){
+
+        window.open(link,"_blank");
+    }
+}
+
+function kiemTra(){
+
+    const mvd =
+        normalizeMVD(
+            document.getElementById("mvd").value
+        );
+
+    const link = taoLink(mvd);
+
+    if(!link){
+
+        showToast(
+            "Không nhận diện được đơn vị vận chuyển"
+        );
+
+        return;
+    }
+
+    window.open(link,"_blank");
+}
+
+// ======================================
+// GHI CHÚ
+// ======================================
+
+function taoGhiChu(){
+
+    let mvd =
+        normalizeMVD(
+            document.getElementById("mvd").value
+        );
+
+    if(selectedMVD.length === 1){
+
+        mvd = selectedMVD[0];
+    }
+
+    const ghichu =
+        document.getElementById("ghichu").value.trim();
+
+    const link = taoLink(mvd);
+
+    if(!link){
+
+        showToast(
+            "Không nhận diện được đơn vị vận chuyển"
+        );
+
+        return;
+    }
+
+    const text =
+        ghichu + "\n\n" + link;
+
+    const box =
+        document.getElementById("ketqua");
+
+    box.innerText = text;
+
+    box.classList.remove("hidden");
+
+    document
+    .getElementById("copyBtn")
+    .classList.remove("hidden");
+}
+
+function copyGhiChu(){
+
+    const text =
+        document.getElementById("ketqua").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    showToast("Đã copy ghi chú");
 }
 
 </script>
