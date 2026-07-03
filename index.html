@@ -334,7 +334,7 @@ function taoLink(mvd){
     }
 
     // VNPOST
-    if(/^E[A-Z][A-Z0-9]+VN$/.test(mvd)){
+    if(/^E[A-Z0-9]+VN$/.test(mvd)){
 
         return "https://www.aftership.com/vi/track/vnpost/" + mvd;
     }
@@ -412,7 +412,7 @@ function extractAllMVD(text){
 
         /8\d{11}/g,
 
-        /E[A-Z][A-Z0-9]+VN/g,
+        /E[A-Z0-9]+VN/g,
 
         /VN[A-Z0-9]+[A-Z]/g
     ];
