@@ -340,7 +340,7 @@ function taoLink(mvd){
     }
 
     // VN...
-    if(/^VN[A-Z0-9]+[A-Z]$/.test(mvd)
+    if(/^VN[A-Z][A-Z0-9]+[A-Z]$/.test(mvd)
         &&
         !mvd.includes("SPXVN")
         &&
@@ -414,7 +414,7 @@ function extractAllMVD(text){
 
         /E[A-Z0-9]+VN/g,
 
-        /VN[A-Z0-9]+[A-Z]/g
+        /VN[A-Z][A-Z0-9]+[A-Z]/g
     ];
 
     otherPatterns.forEach(regex=>{
